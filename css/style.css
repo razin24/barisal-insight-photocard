@@ -412,11 +412,17 @@ select.field-input {
 }
 
 .card-headline {
-  font-size: 64px;
+  font-family: var(--font-headline); /* 'Hind Siliguri' নিশ্চিত করার জন্য */
+  font-size: 58px; /* টেক্সট ফিট করার জন্য সামান্য কমানো হয়েছে */
   font-weight: 700;
-  line-height: 1.28;
-  margin-bottom: 24px;
+  line-height: 1.25; /* পঠনযোগ্যতা বাড়ানোর জন্য সামঞ্জস্যপূর্ণ */
+  margin-bottom: 20px;
   letter-spacing: -0.5px;
+  word-wrap: break-word; /* লম্বা শব্দ ভেঙে যাওয়ার হাত থেকে রক্ষা করবে */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* সর্বোচ্চ ৩ লাইন পর্যন্ত দেখাবে */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .card-sub {
