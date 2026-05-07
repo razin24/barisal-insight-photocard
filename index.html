@@ -176,5 +176,48 @@
 </main>
 
 <script src="js/app.js"></script>
+  <script>
+  // পেজ সম্পূর্ণ লোড হওয়ার পর ডাটা ইনজেক্ট করার জন্য ১ সেকেন্ড সময় দেওয়া হয়েছে
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      const params = new URLSearchParams(window.location.search);
+      const headline = params.get('h');
+      const subtitle = params.get('s');
+      const imageUrl = params.get('i');
+
+      // ১. হেডলাইন সেট করা
+      if (headline) {
+        const hInput = document.querySelector('textarea[placeholder*="শিরোনাম"]');
+        const hPreview = document.querySelector('#news-title, .preview-headline, h1');
+        if (hInput) {
+          hInput.value = headline;
+          hInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        if (hPreview) hPreview.innerText = headline;
+      }
+
+      // ২. সাব-হেডলাইন সেট করা
+      if (subtitle) {
+        const sInput = document.querySelector('textarea[placeholder*="সাব-হেডলাইন"]');
+        const sPreview = document.querySelector('#news-subtitle, .preview-sub, p');
+        if (sInput) {
+          sInput.value = subtitle;
+          sInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        if (sPreview) sPreview.innerText = subtitle;
+      }
+
+      // ৩. নিউজ ফটো সেট করা
+      if (imageUrl && imageUrl !== "null") {
+        const imgElem = document.querySelector('#news-image, .preview-card img');
+        if (imgElem) {
+          imgElem.src = imageUrl;
+          // যদি আপনার সাইট ব্যাকগ্রাউন্ড ইমেজ ব্যবহার করে
+          imgElem.style.backgroundImage = "url('" + imageUrl + "')";
+        }
+      }
+    }, 1000); // ১০০০ মিলি-সেকেন্ড বা ১ সেকেন্ড ওয়েট করবে
+  });
+</script>
 </body>
 </html>
