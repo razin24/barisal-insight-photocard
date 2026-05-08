@@ -420,19 +420,18 @@ select.field-input {
   height: 5px;
   width: 80px;
   border-radius: 4px;
-  margin-bottom: 15px;
-  /* হেডলাইনের সাথে সামঞ্জস্য রেখে এই দাগটিকেও মাঝখানে আনা হলো */
+  margin-bottom: 5px !important; /* এটি ১৫ পিক্সেল থেকে কমিয়ে ৫ পিক্সেল করা হয়েছে */
   margin-left: auto;
   margin-right: auto;
 }
 
 .card-headline {
-  font-size: 64px;
+  font-size: 60px;
   font-weight: 700;
   /* মাত্রা না কাটার জন্য লাইন হাইট ও প্যাডিং */
-  line-height: 1.5 !important;
+  line-height: 1.3 !important;
   margin-top: 0 !important;
-  margin-bottom: 24px !important;
+  margin-bottom: 8px !important;
   padding-top: 10px !important;
   padding-bottom: 0 !important;
   
@@ -458,6 +457,7 @@ select.field-input {
   padding-left: 26px;
   border-left-width: 5px;
   border-left-style: solid;
+  margin-top: 0 !important; /* সাব-হেডলাইন যাতে উপরের দিকে চেপে থাকে তার জন্য এটি যুক্ত করা হলো */
 }
 
 /* ---- BOTTOM ---- */
