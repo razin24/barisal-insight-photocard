@@ -17,6 +17,7 @@
   --gray-600: #666666;
 
   /* Fonts */
+  --font: 'Hind Siliguri', sans-serif; /* এই ভেরিয়েবলটি যুক্ত করা হয়েছে */
   --font-headline: 'Hind Siliguri', sans-serif;
   --font-sub: 'Anek Bangla', sans-serif;
 
@@ -240,12 +241,14 @@ select.field-input {
   width: calc(var(--card-w) * var(--scale));
   height: calc(var(--card-h) * var(--scale));
   position: relative;
+  margin: 0 auto;
+  flex-shrink: 0;
 }
 
 .card-scaler > .card {
   transform: scale(var(--scale));
   transform-origin: top left;
-  position: absolute;
+  position: absolute !important;
   top: 0; left: 0;
 }
 
@@ -253,13 +256,20 @@ select.field-input {
    PHOTOCARD BASE
    ============================================ */
 .card {
-  width: var(--card-w);
-  height: var(--card-h);
+  width: var(--card-w) !important;
+  min-width: var(--card-w) !important;
+  max-width: var(--card-w) !important;
+  height: var(--card-h) !important;
+  min-height: var(--card-h) !important;
+  max-height: var(--card-h) !important;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   font-family: var(--font);
+  background-color: #fff;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
 }
 
 /* ---- TOP BAR ---- */
@@ -400,23 +410,45 @@ select.field-input {
 
 /* ---- CONTENT ---- */
 .card-content {
-  padding: 44px 64px 0;
+  padding: 24px 64px 0;
   flex: 1;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .content-accent {
   height: 5px;
   width: 80px;
   border-radius: 4px;
-  margin-bottom: 28px;
+  margin-bottom: 15px;
+  /* হেডলাইনের সাথে সামঞ্জস্য রেখে এই দাগটিকেও মাঝখানে আনা হলো */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .card-headline {
   font-size: 64px;
   font-weight: 700;
-  line-height: 1.28;
-  margin-bottom: 24px;
-  letter-spacing: -0.5px;
+  /* মাত্রা না কাটার জন্য লাইন হাইট ও প্যাডিং */
+  line-height: 1.5 !important;
+  margin-top: 0 !important;
+  margin-bottom: 24px !important;
+  padding-top: 10px !important;
+  padding-bottom: 0 !important;
+  
+  width: 100% !important;
+  display: block !important;
+  
+  /* টেক্সট কম থাকলে মাঝখান থেকে শুরু হওয়ার লজিক */
+  text-align: center !important;
+  
+  /* বাংলা ফন্টের জন্য স্পেসিং ঠিক করা হলো */
+  letter-spacing: normal !important;
+  white-space: normal !important;
+  word-break: keep-all !important;
+  overflow-wrap: break-word;
+  font-variant-ligatures: normal;
+  -webkit-font-smoothing: antialiased;
 }
 
 .card-sub {
@@ -434,7 +466,7 @@ select.field-input {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto;
+  margin-top: auto !important; /* লেখা কম থাকলেও এটি কার্ডের নিচে আটকে থাকবে */
   border-top-width: 1px;
   border-top-style: solid;
   padding-top: 28px;
@@ -473,7 +505,6 @@ select.field-input {
   top: 0; right: 0;
   width: 300px; height: 300px;
   background: linear-gradient(225deg, var(--red) 50%, transparent 50%);
-  /* Use clip-path to create a triangular corner accent */
   -webkit-clip-path: polygon(100% 0, 0 0, 100% 100%);
   clip-path: polygon(100% 0, 0 0, 100% 100%);
   z-index: 0;
@@ -503,10 +534,9 @@ select.field-input {
 .theme-white .card-bottom { border-top-color: #eee; }
 .theme-white .card-site { color: #000000; }
 .theme-white .card-dot { background: var(--red); }
+
 /* ============================================
-
    THEME: DARK
-
    ============================================ */
 
 .theme-dark {
@@ -534,7 +564,7 @@ select.field-input {
   color: var(--red);
   border: 1px solid rgba(217,0,18,0.3);
 }
-.theme-dark  { color: rgba(14, 13, 13, 0.4); }
+.theme-dark .card-date { color: rgba(255, 255, 255, 0.7); } /* ক্লাস মিসিং সমস্যা ঠিক করা হয়েছে */
 .theme-dark .card-divider {
   background: rgba(255,255,255,0.08);
 }
@@ -548,6 +578,7 @@ select.field-input {
 .theme-dark .card-bottom { border-top-color: rgba(255,255,255,0.08); }
 .theme-dark .card-site { color: rgba(255,255,255,0.8); }
 .theme-dark .card-dot { background: var(--red); }
+
 /* ============================================
    THEME: LIGHT (প্রথম আলো-স্টাইল)
    ============================================ */
@@ -585,6 +616,7 @@ select.field-input {
 .theme-light .card-bottom { border-top-color: #e0ddd8; }
 .theme-light .card-site { color: #333; }
 .theme-light .card-dot { background: var(--red); }
+
 /* ============================================
    RESPONSIVE
    ============================================ */
