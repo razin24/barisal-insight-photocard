@@ -1,6 +1,6 @@
 /**
  * বরিশাল ইনসাইড — ফটোকার্ড জেনারেটর
- * app.js — Live preview & PNG download
+ * app.js — Live preview & PNG download (1080x1080)
  */
 
 (function () {
@@ -115,57 +115,89 @@
     reader.readAsDataURL(file);
   });
 
-  // Download
+  // Download Action - Fixed for GitHub and White Borders
   downloadBtn.addEventListener('click', async () => {
     downloadBtn.disabled = true;
     downloadBtn.textContent = 'প্রসেস হচ্ছে...';
 
     try {
-      const scaler = document.querySelector('.card-scaler');
+      // ফন্ট লোডিং গ্যারান্টি (গিটহাবে বাংলা ফন্ট ভাঙা রোধ করবে)
+      await document.fonts.ready;
+
+      // স্ক্রোল বাগ ফিক্স: পেজের টপে চলে যাওয়া
+      const prevScrollY = window.scrollY;
+      window.scrollTo(0, 0);
+
+      // বর্তমান পজিশন এবং স্টাইল সেভ করে রাখা
+      const parent = card.parentNode;
+      const nextSibling = card.nextSibling;
+      const originalCssText = card.style.cssText;
+
+      // সাদা বর্ডার দূর করার জন্য কার্ডটিকে একটি আলাদা র‍্যাপারে নিয়ে আসা
+      const captureWrapper = document.createElement('div');
+      captureWrapper.style.position = 'fixed';
+      captureWrapper.style.top = '0';
+      captureWrapper.style.left = '0';
+      captureWrapper.style.width = '1080px';
+      captureWrapper.style.height = '1080px';
+      captureWrapper.style.overflow = 'hidden';
+      captureWrapper.style.zIndex = '-9999';
+      captureWrapper.style.background = '#ffffff';
       
-      // বর্তমান স্টাইলগুলো সেভ করে রাখা
-      const originalCardStyle = card.style.cssText;
-      const originalScalerStyle = scaler.style.cssText;
+      document.body.appendChild(captureWrapper);
 
-      // প্যারেন্ট এলিমেন্টের স্কেলিং বন্ধ করা যেন html2canvas কনফিউজড না হয়
-      scaler.style.transform = 'none';
-      scaler.style.width = '1080px';
-      scaler.style.height = '1080px';
+      // কার্ডটিকে র‍্যাপারে যুক্ত করা এবং সাইজ ফিক্স করা
+      card.style.cssText = `
+        width: 1080px !important;
+        height: 1080px !important;
+        min-height: 1080px !important;
+        max-height: 1080px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: relative !important;
+        transform: none !important;
+        box-sizing: border-box !important;
+      `;
+      captureWrapper.appendChild(card);
 
-      // কার্ডের লেআউট ফিক্স করা
-      card.style.transform = 'none';
-      card.style.position = 'relative';
-      card.style.width = '1080px';
-      card.style.height = '1080px';
-      card.style.margin = '0';
-
-      // ব্রাউজারকে নতুন স্টাইল রেন্ডার করার জন্য সামান্য সময় দেওয়া
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // ডম (DOM) রিফ্রেশ হওয়ার জন্য সামান্য সময় দেওয়া
+      await new Promise(resolve => setTimeout(resolve, 150));
 
       const canvas = await html2canvas(card, {
         width: 1080,
         height: 1080,
-        scale: 2,           // 2x = high-res (2160×2700)
+        scale: 2,           // 2x = high-res (2160×2160)
         useCORS: true,
         allowTaint: true,
         logging: false,
-        backgroundColor: null,
+        backgroundColor: '#ffffff', // Null এর বদলে সাদা ব্যাকগ্রাউন্ড
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1080,
+        windowHeight: 1080
       });
 
       // সবকিছু আগের অবস্থায় ফিরিয়ে আনা
-      card.style.cssText = originalCardStyle;
-      scaler.style.cssText = originalScalerStyle;
+      card.style.cssText = originalCssText;
+      if (nextSibling) {
+        parent.insertBefore(card, nextSibling);
+      } else {
+        parent.appendChild(card);
+      }
+      document.body.removeChild(captureWrapper);
+      window.scrollTo(0, prevScrollY);
 
-      // Download
+      // Download Trigger
       const link = document.createElement('a');
       link.download = `barishal-insight-photocard-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
+      link.href = canvas.toDataURL('image/png', 1.0);
       link.click();
 
     } catch (err) {
       console.error('Download error:', err);
       alert('ডাউনলোড করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
     } finally {
+      // বাটন আগের অবস্থায় ফিরিয়ে আনা
       downloadBtn.disabled = false;
       downloadBtn.innerHTML = `
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
